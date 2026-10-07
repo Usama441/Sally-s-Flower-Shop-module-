@@ -1,0 +1,62 @@
+name: Flower Shop CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install development tools
+        run: python -m pip install -r requirements-dev.txt
+      - name: Check Python code
+        run: |
+          ruff check .
+          ruff format --check .
+          python -m compileall -q __init__.py __manifest__.py models
+
+  install:
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:15.19
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: flower_shop_ci
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U odoo -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and upgrade the module in Odoo 19
+        env:
+          FLOWER_DB_PORT: ${{ job.services.postgres.ports[5432] }}
+        run: |
+          set -euo pipefail
+          for operation in --init --update; do
+            docker run --rm --network host --entrypoint odoo \
+              --mount "type=bind,source=$GITHUB_WORKSPACE,target=/mnt/extra-addons/flower_shop,readonly" \
+              odoo:19.0-20260908 \
+              --db_host=127.0.0.1 --db_port="$FLOWER_DB_PORT" \
+              --db_user=odoo --db_password=flower_shop_ci \
+              --database=flower_shop_ci \
+              "$operation"=flower_shop \
+              --without-demo=True --stop-after-init --no-http
+          done
