@@ -1,12 +1,12 @@
 {
     "name": "Flower Shop",
-    "version": "19.0.1.0.0",
-    "summary": "Manage flowers and their seasonal watering information",
-    "category": "Services",
+    "version": "19.0.1.1.0",
+    "summary": "Manage flower products and sell them on sales orders",
+    "category": "Sales/Sales",
     "author": "Usama",
     "license": "LGPL-3",
-    "depends": ["base"],
-    "data": [],
+    "depends": ["sale"],
+    "data": ["views/product_template_views.xml"],
     "application": True,
     "installable": True,
 }

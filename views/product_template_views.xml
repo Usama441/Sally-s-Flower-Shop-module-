@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_flower" model="ir.ui.view">
+        <field name="name">product.template.form.flower</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-flex">
+                    <field name="is_flower"/>
+                    <label for="is_flower"/>
+                </span>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="flower_details" string="Flower Details" invisible="not is_flower">
+                    <group>
+                        <group>
+                            <field name="scientific_name"/>
+                            <field name="season_start"/>
+                            <field name="season_end"/>
+                        </group>
+                        <group>
+                            <field name="watering_frequency"/>
+                            <field name="watering_amount"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_flower_products" model="ir.actions.act_window">
+        <field name="name">Flowers</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[("is_flower", "=", True)]</field>
+        <field name="context">{"default_is_flower": True, "default_sale_ok": True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first flower product</p>
+            <p>Add its price and flower details, then select it on a quotation.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_flower_products"
+              name="Flowers"
+              parent="sale.product_menu_catalog"
+              action="action_flower_products"
+              groups="sales_team.group_sale_salesman"
+              sequence="15"/>
+</odoo>
