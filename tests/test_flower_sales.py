@@ -1,6 +1,7 @@
 from lxml import etree
 
 from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests.common import new_test_user
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -29,6 +30,17 @@ class TestFlowerSales(TransactionCase):
         self.assertEqual(
             self.env.ref("flower_shop.menu_flower_products").action, action
         )
+        salesperson = new_test_user(
+            self.env,
+            login="flower_salesperson",
+            groups="sales_team.group_sale_salesman",
+        )
+        menus = self.env["ir.ui.menu"].with_user(salesperson).load_menus(False)
+        root = self.env.ref("flower_shop.menu_flower_shop_root")
+        child = self.env.ref("flower_shop.menu_flower_shop_flowers")
+        self.assertIn(root.id, menus["root"]["children"])
+        self.assertIn(child.id, menus[root.id]["children"])
+        self.assertEqual(menus[child.id]["action_id"], action.id)
 
     def test_sale_selectors_and_catalog_only_offer_sellable_flowers(self):
         templates = self.env["product.template"].create(

@@ -5,7 +5,8 @@ An Odoo 19 learning module developed in small, reviewable steps.
 ## Current step: sell flower products
 
 1. Install or upgrade Flower Shop. Its `sale` dependency installs the Sales app.
-2. Open **Sales > Products > Flowers** and create a product. It defaults to
+2. Open **Flower Shop > Flowers** from the app dashboard, or
+   **Sales > Products > Flowers**, and create a product. It defaults to
    **Flower** and **Sales** enabled. Use its product name as the common name.
 3. Set the sales price and enter the scientific name, season dates, and watering
    information in the **Flower Details** tab.
@@ -16,6 +17,10 @@ Products created through ordinary product screens default to `is_flower=False`.
 The **Flower** checkbox can also classify an existing product. The Flowers
 action has a fixed domain, so clearing search filters still shows only flowers.
 The standard Products screen remains the full product catalog.
+
+The dashboard entry comes from the top-level Flower Shop menu. After updating
+the module's XML, upgrade Flower Shop in Apps and reload the browser. The menu
+is visible to users with Sales access.
 
 The filter applies to all sales orders while this module is installed. It is a
 selection filter, not a server constraint: existing lines and programmatically

@@ -1,6 +1,6 @@
 {
     "name": "Flower Shop",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.1.1",
     "summary": "Manage flower products and sell them on sales orders",
     "category": "Sales/Sales",
     "author": "Usama",

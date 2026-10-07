@@ -41,6 +41,18 @@
         </field>
     </record>
 
+    <menuitem id="menu_flower_shop_root"
+              name="Flower Shop"
+              web_icon="fa fa-leaf,#FFFFFF,#2E7D32"
+              groups="sales_team.group_sale_salesman"
+              sequence="35"/>
+
+    <menuitem id="menu_flower_shop_flowers"
+              name="Flowers"
+              parent="menu_flower_shop_root"
+              action="action_flower_products"
+              sequence="10"/>
+
     <menuitem id="menu_flower_products"
               name="Flowers"
               parent="sale.product_menu_catalog"
