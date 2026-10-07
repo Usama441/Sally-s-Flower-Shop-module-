@@ -23,7 +23,7 @@ jobs:
         run: |
           ruff check .
           ruff format --check .
-          python -m compileall -q __init__.py __manifest__.py models
+          python -m compileall -q __init__.py __manifest__.py models tests
 
   install:
     needs: lint
@@ -45,7 +45,7 @@ jobs:
           --health-retries 10
     steps:
       - uses: actions/checkout@v6
-      - name: Install and upgrade the module in Odoo 19
+      - name: Install, test, and upgrade the module in Odoo 19
         env:
           FLOWER_DB_PORT: ${{ job.services.postgres.ports[5432] }}
         run: |
@@ -58,5 +58,6 @@ jobs:
               --db_user=odoo --db_password=flower_shop_ci \
               --database=flower_shop_ci \
               "$operation"=flower_shop \
-              --without-demo=True --stop-after-init --no-http
+              --without-demo=True --stop-after-init --no-http \
+              --test-enable --test-tags=/flower_shop
           done
